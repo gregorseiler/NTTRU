@@ -2,10 +2,10 @@
 #include "params.h"
 #include "poly.h"
 
-void ntru_keygen(poly *hhat, poly *fhat, const unsigned char coins[N]) {
+int ntru_keygen(poly *hhat, poly *fhat, const unsigned char coins[N]) {
+  int r;
   poly f, g;
 
-start:
   poly_short(&f, coins);
   poly_short(&g, coins + N/2);
   poly_triple(&g, &g);
@@ -14,10 +14,10 @@ start:
   poly_ntt(fhat, &f);
   poly_ntt(&g, &g);
   poly_freeze(fhat);
-  if(poly_baseinv(&f, fhat))
-    goto start;
+  r = poly_baseinv(&f, fhat);
   poly_basemul(hhat, &f, &g);
   poly_freeze(hhat);
+  return r;
 }
 
 void ntru_encrypt(poly *chat,

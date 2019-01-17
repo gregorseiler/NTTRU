@@ -13,9 +13,10 @@ int crypto_kem_keypair(unsigned char *pk, unsigned char *sk) {
   unsigned char coins[N];
   poly hhat, fhat;
 
-  randombytes(coins, 32);
-  crypto_stream(coins, N, n, coins);
-  ntru_keygen(&hhat, &fhat, coins);
+  do {
+    randombytes(coins, 32);
+    crypto_stream(coins, N, n, coins);
+  } while(ntru_keygen(&hhat, &fhat, coins));
 
   poly_pack_uniform(pk, &hhat);
   poly_pack_uniform(sk, &fhat);

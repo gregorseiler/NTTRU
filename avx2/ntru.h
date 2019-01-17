@@ -3,7 +3,7 @@
 
 #include "poly.h"
 
-void ntru_keygen(poly *hhat, poly *fhat, const unsigned char *coins);
+int ntru_keygen(poly *hhat, poly *fhat, const unsigned char *coins);
 void ntru_encrypt(poly *chat,
                   const poly *hhat,
                   const poly *m,
