@@ -1,7 +1,6 @@
 import numpy as np
 import time
 import sympy as sp
-#from gmpy import invert # thought this would help with modular inverse.  maybe too much conversion is ruining the effect
 
 from mod_sqrt import modular_sqrt
 from cube_root import cuberoots
@@ -333,66 +332,3 @@ def invntt(pol,all_roots,specs):
 # 	bot_deg=specs[5]
 # 	pol=nttgen(pol.copy(),root_tree,specs)
 # 	return invntt(pol,all_roots,specs)
-
-
-if __name__ == '__main__':
-	data5762593=[2593,4,2,1137,576,2]
-	data5763457=[3457,5,2,722,576,1]
-	data6482917=[2917,1,4,247,648,2]
-	data7683457=[3457,6,1,722,768,2]
-	data9723889=[3889,1,4,1890,972,3]
-	# add X^12-X^6+1 mod 37
-	data1237=[37,1,1,10,12,1]
-	data2437=[37,1,1,10,24,2]
-	data1213=[13,1,0,3,12,3]
-	datalist=[data5762593,data5763457,data6482917,data7683457,data9723889,data1237,data2437,data1213]
-
-	data=datalist[7]
-	p=data[0]
-	halfings=data[1]
-	thirdings=data[2]
-	prim3=data[3]
-	botdeg=data[5]
-	tr,all_last_roots=constc(data)
-	# print(tr)
-	invroots=invconstc(tr,p)
-	n=data[4]
-	a=np.int64(np.ones(n))
-	a[0]=1
-	a[1]=1
-	a[2]=1
-	print(a)
-	b=a.copy()
-	a=nttgen(a,tr,data)
-	a=invntt(a,all_last_roots,data)
-	a=invntt(a,all_last_roots,data)
-	a=inttgen(a,invroots,data)
-	print(a)
-	a=multnttpol(a,b,tr,all_last_roots,data)
-	print('id?',a)
-
-	idpol=np.int64(np.zeros(n))
-	idpol[0]=1
-	#a[0]=2
-	#a[1]=5
-	#a[3]=-11
-	print(nttgen(a.copy(),tr,data))
-	#print('ANY ZERO????', ntthaszero(ntta,botdeg))
-	#ntinv=nttinv2(ntta,all_last_roots,p)
-	ntinv=invpol(a.copy(),tr,all_last_roots,data)
-	print(ntinv)
-	#ntinv=multnttpol(ntinv,idpol,tr,all_last_roots,data)
-	#print(ntinv)
-	ntinv2=inttgen(ntinv.copy(),invroots,data)
-	print(ntinv2)
-	#ntres=multnttntt(ntta,ntinv,all_last_roots,data)
-	ntres2=multnttpol(ntinv,a,tr,all_last_roots,data)
-	aprime=inttgen(ntres2,invroots,data)
-	print('IDENTITY???', aprime)
-	
-	#print(nttmult2(ntta,ntta,all_last_roots,p))
-	#print(a %p)
-	print('got here')
-	#aprime=inttgen(ntta,invroots,data)
-	#print(ntta % p)
-	#pri

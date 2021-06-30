@@ -6,18 +6,18 @@ from ntt23 import multnttpol, multnttntt, invntt, inttgen, nttgen, constc, invco
 t1=time.time()
 # data for each parameter set
 # [prime,square roots in ntt, cube roots in ntt, 3rd primitive root of unity, degree, degree of bottom ntt]
-data5762593=[2593,4,2,1137,576,2] # log(err) = -152
-data5763457=[3457,5,1,722,576,3] # log(err) = -260. Can do [3457,5,2,722,576,1], but it's slower. [3457,4,2,722,576,2] is faster.  [3457,5,1,722,576,3] is fastest  
-data6482917=[2917,1,4,247,648,2] # log(err) = -172
-data7683457=[3457,6,1,722,768,2] # log(err) = -206
-data9723889=[3889,1,4,1890,972,3] # log(err) = -210
+data5762593=[2593,4,2,1137,576,2] # log(err) = -152, pk/ct = 864B, 133 core-svp
+data5763457=[3457,5,1,722,576,3] # log(err) = -260, pk/ct = 864B, 128 core-svp. Can also split as [3457,5,2,722,576,1], but it's slower. [3457,4,2,722,576,2] is faster.  [3457,5,1,722,576,3] is fastest  
+data6482917=[2917,1,4,247,648,2] # log(err) = -172, pk/ct = 972B, 152 core-svp
+data7683457=[3457,6,1,722,768,2] # log(err) = -206, pk/ct = 1152B, 181 core-svp
+data9723889=[3889,1,4,1890,972,3] # log(err) = -210, pk/ct = 1458B, 236 corse-svp
 # debugging parameters
 data1237=[37,1,1,10,12,1]
 data2437=[37,1,1,10,24,2]
 data12181=[181,1,1,48,12,1]
 datalist=[data5762593,data5763457,data6482917,data7683457,data9723889,data1237,data2437,data12181]
 
-data=datalist[0] # change the number to set different parameters
+data=datalist[1] # change the number to set different parameters
 
 Q=data[0] # prime
 DEG=data[4] # degree
@@ -179,8 +179,8 @@ def CCA_Decaps(c,gp,hp):
     return shared_key
     
 
-cparuns=1000
-ccaruns=1000
+cparuns=100
+ccaruns=100
 tkeygen=0
 tencrypt=0
 tdecrypt=0
