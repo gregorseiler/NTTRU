@@ -6,11 +6,11 @@ from ntt23 import multnttpol, multnttntt, invntt, inttgen, nttgen, constc, invco
 t1=time.time()
 # data for each parameter set
 # [prime,square roots in ntt, cube roots in ntt, 3rd primitive root of unity, degree, degree of bottom ntt]
-data5762593=[2593,4,2,1137,576,2] # log(err) = -152
-data5763457=[3457,5,1,722,576,3] # log(err) = -260. Can do [3457,5,2,722,576,1], but it's slower. [3457,4,2,722,576,2] is faster.  [3457,5,1,722,576,3] is fastest  
-data6482917=[2917,1,4,247,648,2] # log(err) = -172
-data7683457=[3457,6,1,722,768,2] # log(err) = -206
-data9723889=[3889,1,4,1890,972,3] # log(err) = -210
+data5762593=[2593,4,2,1137,576,2] # log(err) = -152, pk/ct = 864B, 133 core-svp
+data5763457=[3457,5,1,722,576,3] # log(err) = -260, pk/ct = 864B, 128 core-svp. Can also split as [3457,5,2,722,576,1], but it's slower. [3457,4,2,722,576,2] is faster.  [3457,5,1,722,576,3] is fastest  
+data6482917=[2917,1,4,247,648,2] # log(err) = -172, pk/ct = 972B, 152 core-svp
+data7683457=[3457,6,1,722,768,2] # log(err) = -206, pk/ct = 1152B, 181 core-svp
+data9723889=[3889,1,4,1890,972,3] # log(err) = -210, pk/ct = 1458B, 236 corse-svp
 # debugging parameters
 data1237=[37,1,1,10,12,1]
 data2437=[37,1,1,10,24,2]
