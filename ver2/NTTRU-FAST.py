@@ -6,11 +6,11 @@ from ntt23 import multnttpol, multnttntt, invntt, inttgen, nttgen, constc, invco
 t1=time.time()
 # data for each parameter set
 # [prime,square roots in ntt, cube roots in ntt, 3rd primitive root of unity, degree, degree of bottom ntt]
-data5762593=[2593,4,2,1137,576,2] # log(err) = -152, pk/ct = 864B, 133 core-svp
-data5763457=[3457,5,1,722,576,3] # log(err) = -260, pk/ct = 864B, 128 core-svp. Can also split as [3457,5,2,722,576,1], but it's slower. [3457,4,2,722,576,2] is faster.  [3457,5,1,722,576,3] is fastest  
-data6482917=[2917,1,4,247,648,2] # log(err) = -172, pk/ct = 972B, 152 core-svp
-data7683457=[3457,6,1,722,768,2] # log(err) = -206, pk/ct = 1152B, 181 core-svp
-data9723889=[3889,1,4,1890,972,3] # log(err) = -210, pk/ct = 1458B, 236 corse-svp
+data5762593=[2593,4,2,1137,576,2] # log(err) = -152
+data5763457=[3457,5,1,722,576,3] # log(err) = -260. Can do [3457,5,2,722,576,1], but it's slower. [3457,4,2,722,576,2] is faster.  [3457,5,1,722,576,3] is fastest  
+data6482917=[2917,1,4,247,648,2] # log(err) = -172
+data7683457=[3457,6,1,722,768,2] # log(err) = -206
+data9723889=[3889,1,4,1890,972,3] # log(err) = -210
 # debugging parameters
 data1237=[37,1,1,10,12,1]
 data2437=[37,1,1,10,24,2]
@@ -117,7 +117,7 @@ def CPA_Encrypt(h,m,r=[]):
         r=gen_rand_poly() # create randomness r
     c=multnttpol(h,r,ROOT_TREE,ALL_BOTTOM_ROOTS,data) #c=h*r
     m=nttgen(m,ROOT_TREE,data)
-    c=c+m % Q # c=h*r+m
+    c=(c+m) % Q # c=h*r+m, in ntt rep.
     return c
 
 def CPA_Decrypt(c,g):
@@ -162,23 +162,23 @@ def CCA_Encaps(hp,m0seed=0):
         m0seed=list(randombytes(32))
     shared_key,r,m = expand_m0(hp,m0seed) # creates the shared key, message and randomness
     h=unpack_poly(hp) 
-    c=CPA_Encrypt(h,m,r)
-    return shared_key, c
+    c=CPA_Encrypt(h,m,r) # encrypt c in ntt representation
+    return shared_key, pack_poly(c)
 
-def CCA_Decaps(c,gp,hp):
+def CCA_Decaps(cp,gp,hp):
+    c=unpack_poly(cp)
     g=unpack_poly(gp)
     m0=CPA_Decrypt(c,g)
     m0seed=[]
     # convert first 256 bits of m0 to a 32 byte string
     for i in range(32):
         m0seed.append(bits_to_byte(m0[8*i:8*i+8]))
-    shared_key, c2=CCA_Encaps(hp,m0seed) # re-encrypt with m0seed
-    if not (c==c2).all(): # check that re-encryption equals the plaintext
+    shared_key, c2p=CCA_Encaps(hp,m0seed) # re-encrypt with m0seed
+    if not cp==c2p: # check that re-encryption equals the plaintext
         print('decryption fail')
         return []
     return shared_key
     
-
 cparuns=100
 ccaruns=100
 tkeygen=0
@@ -214,9 +214,9 @@ for j in range(ccaruns):
     gp=pack_poly(g)
     tkeygen+=(time.time()-temp)
     temp=time.time()
-    shared_key, c = CCA_Encaps(hp)
+    shared_key, cp = CCA_Encaps(hp)
     tencrypt+=(time.time()-temp)
     temp=time.time()
-    k2 = CCA_Decaps(c,gp,hp)
+    k2 = CCA_Decaps(cp,gp,hp)
     tdecrypt+=(time.time()-temp)
 print('CCA Runs: ', ccaruns, 'Keygen: ',tkeygen, 'Encrypt: ',tencrypt, 'Decrypt: ',tdecrypt)    

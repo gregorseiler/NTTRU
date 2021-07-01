@@ -28,16 +28,16 @@ def polmod(a,deg,const,p):
 def multdeg2(pol1,pol2,r,p):
 	# multiplication of two polynomials modulo X^2-r
 	res=[]
-	res.append(pol1[0]*pol2[0]+pol1[1]*pol2[1]*r % p)
-	res.append(pol1[0]*pol2[1]+pol1[1]*pol2[0] % p)
+	res.append((pol1[0]*pol2[0]+pol1[1]*pol2[1]*r) % p)
+	res.append((pol1[0]*pol2[1]+pol1[1]*pol2[0]) % p)
 	return res
 
 def multdeg3(a,b,r,p):
 	# multiplication of two polynomials modulo X^3-r
 	res=[]
-	res.append(a[0]*b[0]+(a[1]*b[2]+a[2]*b[1])*r %p )
-	res.append(a[0]*b[1]+a[1]*b[0]+a[2]*b[2]*r % p)
-	res.append(a[0]*b[2]+a[2]*b[0]+a[1]*b[1] % p)
+	res.append((a[0]*b[0]+(a[1]*b[2]+a[2]*b[1])*r) %p )
+	res.append((a[0]*b[1]+a[1]*b[0]+a[2]*b[2]*r) % p)
+	res.append((a[0]*b[2]+a[2]*b[0]+a[1]*b[1]) % p)
 	return res
 
 def invdeg2(pol,r,p):
@@ -54,7 +54,7 @@ def invdeg3(a,r,p):
 	a2r=a[2]*r 
 	a2sqr=a2r*a[2] %p
 	a1a2r=a[1]*a2r %p
-	detinv=mod_invert(int(a[0]*a0sq+r*a[1]*a1sq+a2r*a2sqr-3*a[0]*a1a2r %p),p)
+	detinv=mod_invert(int((a[0]*a0sq+r*a[1]*a1sq+a2r*a2sqr-3*a[0]*a1a2r) %p),p)
 	return [(a0sq-a1a2r)*detinv % p, (a2sqr-a[0]*a[1])*detinv % p, (a1sq-a[0]*a[2])*detinv % p]
 
 def nttmult1(pol1,pol2,p):
@@ -206,9 +206,9 @@ def nttgen(a,roots,specs):
 			f1t2r=-f1r-f1tr # f1t^2r = -f1r - f1tr
 			f2t2r2=-f2r2-f2tr2 # f2t^2r^2 = - f2r^2 - f2r^2 - f2tr^2
 			f0=np.copy(a[azero:azero+tlen])
-			a[azero:azero+tlen]=f0+f1r+f2r2 % p # new value of f0
-			a[azero+tlen:azero+tlen2]=f0+f1tr+f2t2r2 % p # new value of f1
-			a[azero+tlen2:azero+newlen]=f0+f1t2r+f2tr2 % p # new value of f2
+			a[azero:azero+tlen]=(f0+f1r+f2r2) % p # new value of f0
+			a[azero+tlen:azero+tlen2]=(f0+f1tr+f2t2r2) % p # new value of f1
+			a[azero+tlen2:azero+newlen]=(f0+f1t2r+f2tr2) % p # new value of f2
 
 	p=specs[0]
 	halfings=specs[1]
@@ -326,9 +326,3 @@ def invntt(pol,all_roots,specs):
 			return []
 		else:
 			return temp
-
-# def invpol(pol,root_tree,all_roots,specs):
-# 	p=specs[0]
-# 	bot_deg=specs[5]
-# 	pol=nttgen(pol.copy(),root_tree,specs)
-# 	return invntt(pol,all_roots,specs)
