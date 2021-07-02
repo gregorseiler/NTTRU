@@ -129,7 +129,7 @@ def CPA_Decrypt(c,g):
 
 def expand_m0(hp,m0seed):
     # use the 32 byte seed m0 to produce the shared key, the randomness r used in encryption and the 
-    # 'error' m used in encryption.  m should have the property that its first 256 positions
+    # 'error' m used in encryption.  m should have the property that its first 256 positions modulo 2
     # are equal to the positions of m0seed, when the latter is expanded as a 256-bit string 
     for i in range(0,48,1):
         m0seed.append(hp[i]) # append first 48 positions of packed public key mod 256 to the msg 
